@@ -1,0 +1,328 @@
+
+
+/* ከላይ ጨምረው */
+#root {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  display: block !important; /* መሃል ላይ እንዳይታሰር ይከላከላል */
+}
+
+.App {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+
+:root {
+  --charcoal: #0a0a0a;
+  --gold: #d4af37;
+}
+
+body, html {
+  background-color: var(--charcoal);
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  width: 100%;
+}
+
+.App-container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Navbar Full Width */
+.glass-nav {
+  background: rgba(10, 10, 10, 0.95);
+  backdrop-filter: blur(15px);
+  width: 100%;
+  height: 80px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 2000;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.nav-wrapper-full {
+  width: 100%;
+  padding: 0 5%;
+  height: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Hero Section */
+.hero-section {
+  padding: 160px 5% 60px;
+  width: 100%;
+}
+
+.search-box-full {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid var(--gold);
+  border-radius: 100px;
+  padding: 12px 30px;
+  max-width: 600px;
+  margin: 40px auto;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+/* Main Content - Force Full Width */
+.main-content-full {
+  width: 100%;
+  padding: 0 5% 100px;
+  box-sizing: border-box;
+}
+
+/* Bento Grid System */
+.bento-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-auto-rows: 280px;
+  gap: 20px;
+  width: 100%;
+  justify-items: stretch; /* እያንዳንዱን ካርድ ዳር እስከ ዳር ይወጥራል */
+  align-items: stretch;
+}
+
+.bento-item {
+  width: 100%;
+  height: 100%;
+  border-radius: 30px;
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  align-items: flex-end;
+  padding: 25px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  overflow: hidden;
+}
+
+/* Grid Cell Sizing */
+.large { grid-column: span 2; grid-row: span 2; }
+.medium { grid-column: span 2; }
+.small { grid-column: span 1; }
+
+/* Language Switcher */
+.lang-switcher {
+  background: #1a1a1a;
+  padding: 4px;
+  border-radius: 50px;
+  display: flex;
+}
+.lang-switcher button {
+  background: none;
+  border: none;
+  color: #666;
+  padding: 5px 15px;
+  border-radius: 50px;
+  font-weight: bold;
+  transition: 0.3s;
+}
+.lang-switcher button.active {
+  background: var(--gold);
+  color: black;
+}
+
+/* Responsive */
+@media (max-width: 1100px) {
+  .bento-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 768px) {
+  .bento-grid { 
+    grid-template-columns: 1fr; 
+    grid-auto-rows: 250px;
+  }
+  .large, .medium, .small { grid-column: span 1; grid-row: span 1; }
+}
+.filter-container {
+  margin-top: -20px;
+}
+
+.filter-btn {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  /* color: white; */
+  color: black;
+  padding: 10px 25px;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 500;
+}
+
+.filter-btn:hover {
+  background: rgba(212, 175, 55, 0.1);
+  border-color: var(--gold);
+}
+
+.filter-btn.active {
+  background: var(--gold);
+  color: black;
+  border-color: var(--gold);
+  box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+}
+/* Modal Styles */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(8px);
+  z-index: 3000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.modal-card {
+  background: #1a1a1a;
+  width: 100%;
+  max-width: 500px;
+  border-radius: 30px;
+  overflow: hidden;
+  position: relative;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.modal-img {
+  height: 250px;
+  background-size: cover;
+  background-position: center;
+}
+
+.close-btn {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: rgba(0, 0, 0, 0.5);
+  border: none;
+  color: white;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 1.2rem;
+  z-index: 10;
+}
+
+.close-btn:hover {
+  background: var(--gold);
+  color: black;
+}
+
+/* Bento Item Hover */
+.bento-item {
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+.bento-item:hover {
+  transform: translateY(-5px);
+}
+.artisan-list-modal {
+  max-width: 450px;
+  max-height: 85vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.modal-header-img {
+  height: 180px;
+  background-size: cover;
+  background-position: center;
+  position: relative;
+}
+
+.header-overlay {
+  height: 100%;
+  width: 100%;
+  background: linear-gradient(transparent, rgba(0,0,0,0.9));
+}
+
+.artisan-scroll-area {
+  overflow-y: auto;
+  max-height: 350px;
+  padding-right: 5px;
+}
+
+/* Custom Scrollbar */
+.artisan-scroll-area::-webkit-scrollbar {
+  width: 4px;
+}
+.artisan-scroll-area::-webkit-scrollbar-thumb {
+  background: var(--gold);
+  border-radius: 10px;
+}
+
+.artisan-item-card {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 15px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: 0.3s;
+}
+
+.artisan-item-card:hover {
+  background: rgba(212, 175, 55, 0.1);
+  border-color: var(--gold);
+}
+.wide-modal {
+  max-width: 600px; /* ዝርዝሩ ሰፊ ስለሚሆን ሞዳሉን ከፍ አድርገነዋል */
+  background: #121212;
+}
+
+.form-select {
+  border-radius: 12px;
+  padding: 10px;
+  font-size: 0.9rem;
+}
+
+.form-select:focus {
+  border-color: var(--gold);
+  box-shadow: 0 0 0 0.25rem rgba(212, 175, 55, 0.25);
+}
+
+.artisan-item-card {
+  border-left: 4px solid transparent;
+}
+
+.artisan-item-card:hover {
+  border-left-color: var(--gold);
+}
+.artisan-scroll-area {
+  max-height: 400px;
+  overflow-y: auto;
+  padding-right: 10px;
+}
+
+.artisan-item-card {
+  background: rgba(255, 255, 255, 0.05);
+  transition: 0.3s;
+}
+
+.artisan-item-card:hover {
+  background: rgba(255, 255, 255, 0.1);
+  transform: translateX(5px);
+}
+
+/* Scrollbar እንዲያምር */
+.artisan-scroll-area::-webkit-scrollbar {
+  width: 5px;
+}
+.artisan-scroll-area::-webkit-scrollbar-thumb {
+  background: #ffc107;
+  border-radius: 10px;
+}
