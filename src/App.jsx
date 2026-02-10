@@ -26,8 +26,30 @@ import sewingImg from './assets/images/sewing.webP';
 import spinningImg from './assets/images/spinning.webP';
 
 const translations = {
-  en: { heroTitle: "Find Trusted", all: "All", construction: "Construction", crafts: "Crafts", fashion: "Fashion", call: "Call", exp: "Yrs Exp", join: "Join Now", noWorkers: "No professionals registered in this category yet." },
-  am: { heroTitle: "ባለሙያዎችን", all: "ሁሉንም", construction: "ግንባታ", crafts: "ጥበብ", fashion: "ልብስ", call: "ደውል", exp: "ዓመት", join: "ይቀላቀሉ", noWorkers: "ለጊዜው በዚህ ዘርፍ የተመዘገቡ ባለሙያዎች የሉም።" }
+  en: { 
+    heroTitle: "Find Trusted", 
+    all: "All", 
+    construction: "Construction", 
+    crafts: "Crafts", 
+    fashion: "Fashion", 
+    call: "Call", 
+    exp: "Yrs Exp", 
+    join: "Join Now", 
+    noWorkers: "No professionals registered in this category yet.",
+    searchPlaceholder: "Search professionals..."
+  },
+  am: { 
+    heroTitle: "ታማኝ ባለሙያዎችን ያግኙ", 
+    all: "ሁሉንም", 
+    construction: "ግንባታ", 
+    crafts: "ጥበብ", 
+    fashion: "ልብስ", 
+    call: "ደውል", 
+    exp: "ዓመት", 
+    join: "ይቀላቀሉ", 
+    noWorkers: "ለጊዜው በዚህ ዘርፍ የተመዘገቡ ባለሙያዎች የሉም።",
+    searchPlaceholder: "ባለሙያ ይፈልጉ..."
+  }
 };
 
 function App() {
@@ -44,7 +66,7 @@ function App() {
 
   const t = translations[lang];
 
-  // --- 1. ዳታውን ከ Firebase በቅጽበት ለማንበብ (Real-time Fetching) ---
+  // --- 1. ዳታውን ከ Firebase በቅጽበት ለማንበብ ---
   useEffect(() => {
     const q = query(collection(db, "workers"), orderBy("createdAt", "desc"));
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
@@ -64,10 +86,10 @@ function App() {
         ...newWorker,
         createdAt: serverTimestamp()
       });
-      alert("ባለሙያው በተሳካ ሁኔታ ተመዝግቧል!");
+      alert(lang === 'am' ? "ባለሙያው በተሳካ ሁኔታ ተመዝግቧል!" : "Registered successfully!");
     } catch (e) {
       console.error("Error: ", e);
-      alert("ስህተት ተፈጥሯል፣ እባክህ ደግመህ ሞክር።");
+      alert(lang === 'am' ? "ስህተት ተፈጥሯል፣ እባክህ ደግመህ ሞክር።" : "An error occurred, please try again.");
     }
   };
 
@@ -76,17 +98,17 @@ function App() {
     if (adminPassword === "123456") {
       setIsAdminAuthenticated(true);
     } else {
-      alert("የተሳሳተ ፓስወርድ ነው!");
+      alert(lang === 'am' ? "የተሳሳተ ፓስወርድ ነው!" : "Incorrect password!");
     }
   };
 
   const artisansData = [
-    { id: 1, title: lang === 'am' ? "የሸክላ ጥበብ ስራ" : "Pottery Art", size: "large", img: potteryImg, category: "crafts" },
-    { id: 2, title: lang === 'am' ? "የወለል እና የሰድር ስራ" : "Floor & Tile", size: "medium", img: flooringImg, category: "construction" },
+    { id: 1, title: lang === 'am' ? "የሸክላ ጥበብ" : "Pottery Art", size: "large", img: potteryImg, category: "crafts" },
+    { id: 2, title: lang === 'am' ? "ወለል እና ሰድር" : "Floor & Tile", size: "medium", img: flooringImg, category: "construction" },
     { id: 3, title: lang === 'am' ? "የአናጺነት ጥበብ" : "Carpentry", size: "small", img: carpentryImg, category: "construction" },
     { id: 4, title: lang === 'am' ? "የሽመና ጥበብ" : "Weaving", size: "medium", img: weavingImg, category: "fashion" },
     { id: 5, title: lang === 'am' ? "ጥልፍና ዳንቴል" : "Embroidery", size: "small", img: embroideryImg, category: "fashion" },
-    { id: 6, title: lang === 'am' ? "የእቃዎች ስፌት" : "Sewing", size: "small", img: sewingImg, category: "fashion" },
+    { id: 6, title: lang === 'am' ? "የልብስ ስፌት" : "Sewing", size: "small", img: sewingImg, category: "fashion" },
     { id: 7, title: lang === 'am' ? "ጥጥ ፈተላ" : "Spinning", size: "small", img: spinningImg, category: "fashion" },
   ];
 
@@ -97,7 +119,7 @@ function App() {
     if (!isAdminAuthenticated) {
       return (
         <div className="bg-dark min-vh-100 d-flex align-items-center justify-content-center text-white p-3">
-          <div className="p-5 rounded-4 bg-dark border border-secondary shadow-lg text-center" style={{maxWidth: '400px', width: '100%'}}>
+          <div className="p-4 p-md-5 rounded-4 bg-dark border border-secondary shadow-lg text-center" style={{maxWidth: '400px', width: '100%'}}>
             <h3 className="mb-4 fw-bold text-warning">የአስተዳዳሪ መግቢያ</h3>
             <form onSubmit={handleAdminLogin}>
               <input type="password" placeholder="ፓስወርድ ያስገቡ" className="form-control bg-dark text-white border-secondary mb-3 py-2 text-center shadow-none" onChange={(e) => setAdminPassword(e.target.value)} />
@@ -122,13 +144,16 @@ function App() {
   return (
     <HelmetProvider>
       <div className="App-container">
+        {/* Navigation - Responsive Adjusted */}
         <nav className="glass-nav">
-          <div className="nav-wrapper-full px-4">
-            <span className="navbar-brand text-white fw-bold fs-2" style={{cursor: 'pointer'}} onClick={() => setIsAdminView(true)}>
+          <div className="nav-wrapper-full d-flex justify-content-between align-items-center px-3 px-md-4 py-2">
+            <span className="navbar-brand text-white fw-bold fs-4 fs-md-2" style={{cursor: 'pointer'}} onClick={() => setIsAdminView(true)}>
               Bemuya<span className="text-warning">Connect</span>
             </span>
-            <div className="nav-actions d-flex align-items-center gap-3">
-              <button className="btn btn-warning rounded-pill px-4 fw-bold" onClick={() => setIsRegOpen(true)}>{t.join}</button>
+            <div className="nav-actions d-flex align-items-center gap-2 gap-md-3">
+              <button className="btn btn-warning rounded-pill px-3 px-md-4 fw-bold btn-sm" onClick={() => setIsRegOpen(true)}>
+                {t.join}
+              </button>
               <div className="lang-switcher">
                 <button className={lang === 'am' ? 'active' : ''} onClick={() => setLang('am')}>አማ</button>
                 <button className={lang === 'en' ? 'active' : ''} onClick={() => setLang('en')}>EN</button>
@@ -137,32 +162,34 @@ function App() {
           </div>
         </nav>
 
-       <header className="hero-section text-center">
-  <h1 className="display-1 fw-bold text-white mb-4">
-    {t.heroTitle} <br />
-    <span className="text-warning">
-      {/* ቋንቋው ሲቀየር አኒሜሽኑም አብሮ እንዲቀየር key={lang} መጨመር አስፈላጊ ነው */}
-      <TypeAnimation 
-        key={lang} 
-        sequence={
-          lang === 'am' 
-            ? ["የሸክላ ጥበብ", 1500, "የልብስ ስፌት", 1500, "አናጺዎች", 1500] // አማርኛ ሲሆን
-            : ["Pottery Art", 1500, "Tailoring", 1500, "Carpentry", 1500]   // እንግሊዝኛ ሲሆን
-        } 
-        repeat={Infinity} 
-      />
-    </span>
-  </h1>
-  <div className="search-box-full mx-auto">
-    <HiSearch className="text-warning fs-4" />
-    <input 
-      type="text" 
-      placeholder={lang === 'am' ? "ባለሙያ ይፈልጉ..." : "Search professionals..."} 
-      className="bg-transparent border-0 text-white w-100 outline-none ms-2" 
-    />
-  </div>
-</header>
-        <main className="main-content-full p-4">
+        {/* Hero Section - Responsive Adjusted */}
+        <header className="hero-section text-center px-3">
+          <h1 className="hero-title fw-bold text-white mb-4">
+            {t.heroTitle} <br />
+            <span className="text-warning">
+              <TypeAnimation 
+                key={lang} 
+                sequence={
+                  lang === 'am' 
+                    ? ["የሸክላ ጥበብ", 1500, "የልብስ ስፌት", 1500, "አናጺዎች", 1500] 
+                    : ["Pottery Art", 1500, "Tailoring", 1500, "Carpentry", 1500] 
+                } 
+                repeat={Infinity} 
+              />
+            </span>
+          </h1>
+          <div className="search-box-full mx-auto w-100" style={{maxWidth: '600px'}}>
+            <HiSearch className="text-warning fs-4" />
+            <input 
+              type="text" 
+              placeholder={t.searchPlaceholder} 
+              className="bg-transparent border-0 text-white w-100 outline-none ms-2" 
+            />
+          </div>
+        </header>
+
+        {/* Main Content */}
+        <main className="main-content-full p-3 p-md-4">
           <div className="filter-wrapper mb-5 d-flex justify-content-center gap-2 flex-wrap">
             {['all', 'construction', 'crafts', 'fashion'].map(f => (
               <button key={f} className={`filter-btn ${activeFilter === f ? 'active' : ''}`} onClick={() => setActiveFilter(f)}>{t[f]}</button>
@@ -186,18 +213,18 @@ function App() {
 
         <RegistrationForm isOpen={isRegOpen} onClose={() => setIsRegOpen(false)} onSubmit={handleNewRegistration} />
         
-        
+        {/* Artisan Detail Modal */}
         <AnimatePresence>
           {selectedArtisan && (
             <motion.div className="modal-overlay" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setSelectedArtisan(null)}>
-              <motion.div className="modal-card wide-modal bg-dark" onClick={e => e.stopPropagation()}>
+              <motion.div className="modal-card wide-modal bg-dark mx-2" onClick={e => e.stopPropagation()}>
                 <button className="close-btn" onClick={() => setSelectedArtisan(null)}><HiX /></button>
-                <div className="p-4">
-                  <h2 className="text-white fw-bold mb-4">{selectedArtisan.title} ዝርዝር</h2>
+                <div className="p-3 p-md-4">
+                  <h2 className="text-white fw-bold mb-4 fs-4">{selectedArtisan.title}</h2>
                   <div className="artisan-scroll-area">
                     {artisansList[selectedArtisan.id] ? (
                       artisansList[selectedArtisan.id].map((art, idx) => (
-                        <div key={idx} className="artisan-item-card d-flex justify-content-between align-items-center p-3 mb-2 rounded-3 border border-secondary">
+                        <div key={idx} className="artisan-item-card d-flex justify-content-between align-items-center p-3 mb-2 rounded-3 border border-secondary flex-wrap gap-2">
                           <div>
                             <h6 className="text-white fw-bold m-0">{art.name}</h6>
                             <small className="text-white-50">

@@ -326,3 +326,49 @@ body, html {
   background: #ffc107;
   border-radius: 10px;
 }
+/* ለስልክ እና ለታብሌት የሚሆን ማስተካከያ */
+@media (max-width: 768px) {
+  /* 1. Navbar: አርማው እና ቁልፉ እንዳይደራረቡ */
+  .nav-wrapper-full {
+    flex-direction: column; /* አንዱ ከሌላው በታች እንዲሆን */
+    gap: 10px;
+    padding: 10px !important;
+  }
+
+  .navbar-brand {
+    font-size: 1.5rem !important; /* የአርማውን መጠን ትንሽ መቀነስ */
+  }
+
+  /* 2. Hero Section: ርዕሱ በስልክ እንዳይበላሽ */
+  .display-1 {
+    font-size: 2.5rem !important;
+    margin-top: 20px;
+  }
+
+  /* 3. Search Box: ከስክሪኑ እንዳይወጣ */
+  .search-box-full {
+    width: 90% !important;
+    max-width: none;
+  }
+
+  /* 4. Filter Buttons: በረድፍ እንዲቀመጡ */
+  .filter-wrapper {
+    gap: 5px;
+  }
+
+  .filter-btn {
+    padding: 8px 15px !important;
+    font-size: 14px;
+  }
+
+  /* 5. Bento Grid: በስልክ አንድ አንድ ረድፍ ብቻ እንዲሆን */
+  .bento-grid {
+    grid-template-columns: 1fr !important;
+    grid-auto-rows: 200px !important;
+  }
+
+  .bento-item.large, .bento-item.medium {
+    grid-column: span 1 !important;
+    grid-row: span 1 !important;
+  }
+}
