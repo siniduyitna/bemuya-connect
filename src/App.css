@@ -1,20 +1,16 @@
-/* ከላይ ጨምረው */
-#root {
+/* --- መሰረታዊ ማስተካከያዎች --- */
+#root, .App {
   width: 100%;
   margin: 0;
   padding: 0;
   display: block !important;
 }
 
-.App {
-  width: 100%;
-  margin: 0;
-  padding: 0;
-}
-
 :root {
   --charcoal: #0a0a0a;
   --gold: #d4af37;
+  --glass: rgba(255, 255, 255, 0.05);
+  --border: rgba(255, 255, 255, 0.1);
 }
 
 body, html {
@@ -23,231 +19,200 @@ body, html {
   padding: 0;
   overflow-x: hidden;
   width: 100%;
+  font-family: 'Inter', -apple-system, sans-serif;
 }
 
-.App-container {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-}
-
-/* Navbar Full Width */
+/* --- 1. Navbar: ስልክ ላይ እንዳይደራረብ የተስተካከለ --- */
 .glass-nav {
-  background: rgba(10, 10, 10, 0.95);
-  backdrop-filter: blur(15px);
+  background: rgba(10, 10, 10, 0.85);
+  backdrop-filter: blur(20px);
   width: 100%;
-  height: 80px;
+  height: auto; /* ስልክ ላይ መጠኑን ራሱ እንዲያስተካክል */
+  min-height: 70px;
   position: fixed;
   top: 0;
   left: 0;
   z-index: 2000;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
 }
 
 .nav-wrapper-full {
   width: 100%;
-  padding: 0 5%;
-  height: 100%;
+  padding: 10px 5%;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex-wrap: wrap; /* ለስልክ አስፈላጊ ነው */
 }
 
-/* Hero Section */
-.hero-section {
-  padding: 160px 5% 60px;
-  width: 100%;
-}
-
-.search-box-full {
-  background: rgba(255,255,255,0.05);
-  border: 1px solid var(--gold);
-  border-radius: 100px;
-  padding: 12px 30px;
-  max-width: 600px;
-  margin: 40px auto;
+/* የቁልፎች መጠቅለያ */
+.nav-actions {
   display: flex;
   align-items: center;
-  gap: 15px;
+  gap: 12px;
 }
 
-/* Main Content */
-.main-content-full {
+/* --- 2. Hero Section: ጽሁፉ እንዳይቆረጥ --- */
+.hero-section {
+  padding: 140px 5% 40px;
   width: 100%;
-  padding: 0 5% 100px;
+  text-align: center;
   box-sizing: border-box;
 }
 
-/* Bento Grid System */
-.bento-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  grid-auto-rows: 280px;
-  gap: 20px;
-  width: 100%;
-  justify-items: stretch;
-  align-items: stretch;
+.hero-title {
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: white;
+  margin-bottom: 20px;
+  line-height: 1.2;
 }
 
-.bento-item {
-  width: 100%;
-  height: 100%;
-  border-radius: 30px;
-  background-size: cover;
-  background-position: center;
+/* --- 3. Search Box: ዘመናዊ እና ሪስፖንሲቭ --- */
+.search-box-full {
+  background: var(--glass);
+  border: 1px solid var(--gold);
+  border-radius: 100px;
+  padding: 8px 20px;
+  max-width: 500px;
+  margin: 20px auto;
   display: flex;
-  align-items: flex-end;
-  padding: 25px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  overflow: hidden;
-  cursor: pointer;
-  transition: transform 0.3s ease;
-}
-
-.bento-item:hover {
-  transform: translateY(-5px);
-}
-
-.large { grid-column: span 2; grid-row: span 2; }
-.medium { grid-column: span 2; }
-.small { grid-column: span 1; }
-
-/* Filter Buttons - ዋናው ማስተካከያ እዚህ ጋር ነው */
-.filter-container {
-  margin-top: -20px;
-  display: flex;
-  flex-wrap: wrap;
+  align-items: center;
   gap: 10px;
+  width: 90%; /* በስልክ ሙሉ እንዳይሆን */
+}
+
+.search-box-full input {
+  background: transparent;
+  border: none;
+  color: white;
+  width: 100%;
+  outline: none;
+  font-size: 1rem;
+}
+
+/* --- 4. Filter Buttons: በስልክ በረድፍ እንዲደረደሩ --- */
+.filter-container {
+  display: flex;
+  justify-content: center;
+  flex-wrap: nowrap; /* በጎን እንዲፈስ */
+  overflow-x: auto; /* በጎን እንዲሸለል (Scroll) */
+  padding: 10px 5%;
+  gap: 10px;
+  margin-top: 10px;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* በጎን ሲሸለል መስመሩ እንዳይታይ */
+.filter-container::-webkit-scrollbar {
+  display: none;
 }
 
 .filter-btn {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  color: black !important; /* ከጥቁር ወደ ነጭ ተቀይሯል - ሁልጊዜ እንዲታይ */
-  padding: 10px 25px;
+  background: var(--glass);
+  border: 1px solid var(--border);
+  color: rgb(5, 1, 1) !important; /* ደብዛዛ እንዳይሆን */
+  padding: 8px 20px;
   border-radius: 50px;
+  white-space: nowrap; /* ጽሁፉ እንዳይሰበር */
+  font-size: 0.9rem;
   cursor: pointer;
-  transition: all 0.3s ease;
-  font-weight: 500;
-}
-
-.filter-btn:hover {
-  background: rgba(212, 175, 55, 0.1);
-  border-color: var(--gold);
+  transition: 0.3s;
 }
 
 .filter-btn.active {
   background: var(--gold) !important;
-  color: black !important; /* ሲመረጥ ብቻ ዳራው ወርቃማ ጽሁፉ ጥቁር ይሆናል */
+  color: black !important;
   border-color: var(--gold);
-  box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
 }
 
-/* Modal Styles */
-.modal-overlay {
-  position: fixed;
-  top: 0;
+/* --- 5. Bento Grid: ስልክ ላይ ቆንጆ እንዲሆን --- */
+.main-content-full {
+  width: 100%;
+  padding: 20px 5% 100px;
+  box-sizing: border-box;
+}
+
+.bento-grid {
+  display: grid;
+  grid-template-columns: 1fr; /* ስልክ ላይ 1 ተርታ */
+  gap: 15px;
+  width: 100%;
+}
+
+.bento-item {
+  width: 100%;
+  height: 220px; /* በስልክ ወጥ የሆነ ቁመት */
+  border-radius: 24px;
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  align-items: flex-end;
+  padding: 20px;
+  border: 1px solid var(--border);
+  position: relative;
+  overflow: hidden;
+}
+
+/* የጽሁፍ ጥላ (Gradient) ካርዶቹ ላይ */
+.bento-item::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
   left: 0;
   width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.85);
-  backdrop-filter: blur(8px);
-  z-index: 3000;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
+  height: 60%;
+  background: linear-gradient(transparent, rgba(0,0,0,0.8));
+  z-index: 1;
 }
 
-.modal-card {
-  background: #1a1a1a;
-  width: 100%;
-  max-width: 500px;
-  border-radius: 30px;
-  overflow: hidden;
+.bento-item > * {
   position: relative;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  z-index: 2;
 }
 
-/* Responsive Fixes */
-@media (max-width: 768px) {
-  .nav-wrapper-full {
-    flex-direction: row;
-    justify-content: space-between;
-    padding: 0 15px !important;
+/* --- 6. Desktop ማስተካከያ (ለሰፊ ስክሪን) --- */
+@media (min-width: 768px) {
+  .hero-title {
+    font-size: 4rem;
   }
 
-  .display-1 {
-    font-size: 2.5rem !important;
+  .bento-grid {
+    grid-template-columns: repeat(4, 1fr);
+    grid-auto-rows: 280px;
   }
 
-  .filter-container {
-    justify-content: center;
-    margin-top: 10px;
-  }
-
-  .bento-grid { 
-    grid-template-columns: 1fr; 
-    grid-auto-rows: 250px;
-  }
+  .large { grid-column: span 2; grid-row: span 2; }
+  .medium { grid-column: span 2; }
   
-  .large, .medium, .small { grid-column: span 1 !important; grid-row: span 1 !important; }
-
-  .search-box-full {
-    width: 95%;
+  .bento-item {
+    height: 100%;
   }
 }
 
-/* Scrollbar Style */
-.artisan-scroll-area::-webkit-scrollbar {
-  width: 5px;
-}
-.artisan-scroll-area::-webkit-scrollbar-thumb {
-  background: #ffc107;
-  border-radius: 10px;
-}
-/* የቋንቋ መቀየሪያ መጠቅለያ (Wrapper) */
+/* --- 7. የቋንቋ መቀየሪያ (Language Switcher) --- */
 .lang-switcher {
-  display: flex;
-  background: rgba(255, 255, 255, 0.05); /* በጣም ጥቃቅን ነጭ ዳራ */
+  background: var(--glass);
   padding: 4px;
-  border-radius: 50px; /* ሙሉ በሙሉ ክብ እንዲሆን */
-  border: 1px solid rgba(255, 255, 255, 0.1); /* ቀጭን መስመር */
-  gap: 2px;
-}
-
-/* የቋንቋ ቁልፎች በሙሉ */
-.lang-switcher button {
-  background: transparent;
-  border: none;
-  color: #a0a0a0; /* ያልተመረጠው ቁልፍ ቀለም ደብዘዝ ያለ */
-  padding: 6px 16px;
   border-radius: 50px;
-  font-size: 0.85rem;
-  font-weight: 600;
+  display: flex;
+  border: 1px solid var(--border);
+}
+
+.lang-switcher button {
+  background: none;
+  border: none;
+  color: #888;
+  padding: 5px 12px;
+  border-radius: 50px;
+  font-size: 0.8rem;
+  font-weight: bold;
   cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
 }
 
-/* ማውሱ ሲያርፍባቸው (Hover) */
-.lang-switcher button:hover {
-  color: #ffffff;
-  background: rgba(255, 255, 255, 0.08);
-}
-
-/* የተመረጠው (Active) ቁልፍ */
 .lang-switcher button.active {
-  background: #ffc107 !important; /* ወርቃማ ቢጫ */
-  color: #000000 !important; /* ጥቁር ጽሁፍ ለንፅፅር */
-  box-shadow: 0 4px 12px rgba(255, 193, 7, 0.3); /* ትንሽ የብርሃን ነጸብራቅ */
-}
-
-/* በስልክ (Mobile) ሲሆን መጠኑን ትንሽ መቀነስ */
-@media (max-width: 768px) {
-  .lang-switcher button {
-    padding: 5px 12px;
-    font-size: 0.75rem;
-  }
+  background: var(--gold);
+  color: black;
 }
