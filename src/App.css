@@ -1,11 +1,9 @@
-
-
 /* ከላይ ጨምረው */
 #root {
   width: 100%;
   margin: 0;
   padding: 0;
-  display: block !important; /* መሃል ላይ እንዳይታሰር ይከላከላል */
+  display: block !important;
 }
 
 .App {
@@ -13,7 +11,6 @@
   margin: 0;
   padding: 0;
 }
-
 
 :root {
   --charcoal: #0a0a0a;
@@ -74,7 +71,7 @@ body, html {
   gap: 15px;
 }
 
-/* Main Content - Force Full Width */
+/* Main Content */
 .main-content-full {
   width: 100%;
   padding: 0 5% 100px;
@@ -88,7 +85,7 @@ body, html {
   grid-auto-rows: 280px;
   gap: 20px;
   width: 100%;
-  justify-items: stretch; /* እያንዳንዱን ካርድ ዳር እስከ ዳር ይወጥራል */
+  justify-items: stretch;
   align-items: stretch;
 }
 
@@ -103,55 +100,30 @@ body, html {
   padding: 25px;
   border: 1px solid rgba(255, 255, 255, 0.1);
   overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.3s ease;
 }
 
-/* Grid Cell Sizing */
+.bento-item:hover {
+  transform: translateY(-5px);
+}
+
 .large { grid-column: span 2; grid-row: span 2; }
 .medium { grid-column: span 2; }
 .small { grid-column: span 1; }
 
-/* Language Switcher */
-.lang-switcher {
-  background: #1a1a1a;
-  padding: 4px;
-  border-radius: 50px;
-  display: flex;
-}
-.lang-switcher button {
-  background: none;
-  border: none;
-  color: #666;
-  padding: 5px 15px;
-  border-radius: 50px;
-  font-weight: bold;
-  transition: 0.3s;
-}
-.lang-switcher button.active {
-  background: var(--gold);
-  color: black;
-}
-
-/* Responsive */
-@media (max-width: 1100px) {
-  .bento-grid { grid-template-columns: repeat(2, 1fr); }
-}
-
-@media (max-width: 768px) {
-  .bento-grid { 
-    grid-template-columns: 1fr; 
-    grid-auto-rows: 250px;
-  }
-  .large, .medium, .small { grid-column: span 1; grid-row: span 1; }
-}
+/* Filter Buttons - ዋናው ማስተካከያ እዚህ ጋር ነው */
 .filter-container {
   margin-top: -20px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
 }
 
 .filter-btn {
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.1);
-  /* color: white; */
-  color: black;
+  color: black !important; /* ከጥቁር ወደ ነጭ ተቀይሯል - ሁልጊዜ እንዲታይ */
   padding: 10px 25px;
   border-radius: 50px;
   cursor: pointer;
@@ -165,11 +137,12 @@ body, html {
 }
 
 .filter-btn.active {
-  background: var(--gold);
-  color: black;
+  background: var(--gold) !important;
+  color: black !important; /* ሲመረጥ ብቻ ዳራው ወርቃማ ጽሁፉ ጥቁር ይሆናል */
   border-color: var(--gold);
   box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
 }
+
 /* Modal Styles */
 .modal-overlay {
   position: fixed;
@@ -196,129 +169,36 @@ body, html {
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.modal-img {
-  height: 250px;
-  background-size: cover;
-  background-position: center;
+/* Responsive Fixes */
+@media (max-width: 768px) {
+  .nav-wrapper-full {
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 0 15px !important;
+  }
+
+  .display-1 {
+    font-size: 2.5rem !important;
+  }
+
+  .filter-container {
+    justify-content: center;
+    margin-top: 10px;
+  }
+
+  .bento-grid { 
+    grid-template-columns: 1fr; 
+    grid-auto-rows: 250px;
+  }
+  
+  .large, .medium, .small { grid-column: span 1 !important; grid-row: span 1 !important; }
+
+  .search-box-full {
+    width: 95%;
+  }
 }
 
-.close-btn {
-  position: absolute;
-  top: 15px;
-  right: 15px;
-  background: rgba(0, 0, 0, 0.5);
-  border: none;
-  color: white;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  font-size: 1.2rem;
-  z-index: 10;
-}
-
-.close-btn:hover {
-  background: var(--gold);
-  color: black;
-}
-
-/* Bento Item Hover */
-.bento-item {
-  cursor: pointer;
-  transition: transform 0.3s ease;
-}
-.bento-item:hover {
-  transform: translateY(-5px);
-}
-.artisan-list-modal {
-  max-width: 450px;
-  max-height: 85vh;
-  display: flex;
-  flex-direction: column;
-}
-
-.modal-header-img {
-  height: 180px;
-  background-size: cover;
-  background-position: center;
-  position: relative;
-}
-
-.header-overlay {
-  height: 100%;
-  width: 100%;
-  background: linear-gradient(transparent, rgba(0,0,0,0.9));
-}
-
-.artisan-scroll-area {
-  overflow-y: auto;
-  max-height: 350px;
-  padding-right: 5px;
-}
-
-/* Custom Scrollbar */
-.artisan-scroll-area::-webkit-scrollbar {
-  width: 4px;
-}
-.artisan-scroll-area::-webkit-scrollbar-thumb {
-  background: var(--gold);
-  border-radius: 10px;
-}
-
-.artisan-item-card {
-  background: rgba(255, 255, 255, 0.05);
-  border-radius: 15px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  transition: 0.3s;
-}
-
-.artisan-item-card:hover {
-  background: rgba(212, 175, 55, 0.1);
-  border-color: var(--gold);
-}
-.wide-modal {
-  max-width: 600px; /* ዝርዝሩ ሰፊ ስለሚሆን ሞዳሉን ከፍ አድርገነዋል */
-  background: #121212;
-}
-
-.form-select {
-  border-radius: 12px;
-  padding: 10px;
-  font-size: 0.9rem;
-}
-
-.form-select:focus {
-  border-color: var(--gold);
-  box-shadow: 0 0 0 0.25rem rgba(212, 175, 55, 0.25);
-}
-
-.artisan-item-card {
-  border-left: 4px solid transparent;
-}
-
-.artisan-item-card:hover {
-  border-left-color: var(--gold);
-}
-.artisan-scroll-area {
-  max-height: 400px;
-  overflow-y: auto;
-  padding-right: 10px;
-}
-
-.artisan-item-card {
-  background: rgba(255, 255, 255, 0.05);
-  transition: 0.3s;
-}
-
-.artisan-item-card:hover {
-  background: rgba(255, 255, 255, 0.1);
-  transform: translateX(5px);
-}
-
-/* Scrollbar እንዲያምር */
+/* Scrollbar Style */
 .artisan-scroll-area::-webkit-scrollbar {
   width: 5px;
 }
@@ -326,49 +206,48 @@ body, html {
   background: #ffc107;
   border-radius: 10px;
 }
-/* ለስልክ እና ለታብሌት የሚሆን ማስተካከያ */
+/* የቋንቋ መቀየሪያ መጠቅለያ (Wrapper) */
+.lang-switcher {
+  display: flex;
+  background: rgba(255, 255, 255, 0.05); /* በጣም ጥቃቅን ነጭ ዳራ */
+  padding: 4px;
+  border-radius: 50px; /* ሙሉ በሙሉ ክብ እንዲሆን */
+  border: 1px solid rgba(255, 255, 255, 0.1); /* ቀጭን መስመር */
+  gap: 2px;
+}
+
+/* የቋንቋ ቁልፎች በሙሉ */
+.lang-switcher button {
+  background: transparent;
+  border: none;
+  color: #a0a0a0; /* ያልተመረጠው ቁልፍ ቀለም ደብዘዝ ያለ */
+  padding: 6px 16px;
+  border-radius: 50px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* ማውሱ ሲያርፍባቸው (Hover) */
+.lang-switcher button:hover {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+/* የተመረጠው (Active) ቁልፍ */
+.lang-switcher button.active {
+  background: #ffc107 !important; /* ወርቃማ ቢጫ */
+  color: #000000 !important; /* ጥቁር ጽሁፍ ለንፅፅር */
+  box-shadow: 0 4px 12px rgba(255, 193, 7, 0.3); /* ትንሽ የብርሃን ነጸብራቅ */
+}
+
+/* በስልክ (Mobile) ሲሆን መጠኑን ትንሽ መቀነስ */
 @media (max-width: 768px) {
-  /* 1. Navbar: አርማው እና ቁልፉ እንዳይደራረቡ */
-  .nav-wrapper-full {
-    flex-direction: column; /* አንዱ ከሌላው በታች እንዲሆን */
-    gap: 10px;
-    padding: 10px !important;
-  }
-
-  .navbar-brand {
-    font-size: 1.5rem !important; /* የአርማውን መጠን ትንሽ መቀነስ */
-  }
-
-  /* 2. Hero Section: ርዕሱ በስልክ እንዳይበላሽ */
-  .display-1 {
-    font-size: 2.5rem !important;
-    margin-top: 20px;
-  }
-
-  /* 3. Search Box: ከስክሪኑ እንዳይወጣ */
-  .search-box-full {
-    width: 90% !important;
-    max-width: none;
-  }
-
-  /* 4. Filter Buttons: በረድፍ እንዲቀመጡ */
-  .filter-wrapper {
-    gap: 5px;
-  }
-
-  .filter-btn {
-    padding: 8px 15px !important;
-    font-size: 14px;
-  }
-
-  /* 5. Bento Grid: በስልክ አንድ አንድ ረድፍ ብቻ እንዲሆን */
-  .bento-grid {
-    grid-template-columns: 1fr !important;
-    grid-auto-rows: 200px !important;
-  }
-
-  .bento-item.large, .bento-item.medium {
-    grid-column: span 1 !important;
-    grid-row: span 1 !important;
+  .lang-switcher button {
+    padding: 5px 12px;
+    font-size: 0.75rem;
   }
 }
