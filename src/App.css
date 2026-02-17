@@ -216,3 +216,25 @@ body, html {
   background: var(--gold);
   color: black;
 }
+.filter-container {
+  margin-top: -20px;
+  display: flex;
+  justify-content: flex-start; /* በግራ በኩል እንዲጀምሩ */
+  overflow-x: auto; /* በጎን እንዲሸለሉ */
+  padding: 15px 5%;
+  gap: 10px; /* በቁልፎቹ መካከል ያለው ርቀት */
+  white-space: nowrap; /* ጽሁፉ ወደ ታች እንዳይወርድ */
+  -webkit-overflow-scrolling: touch; /* ለስልክ ለስላሳ እንዲሆን */
+}
+
+/* የሽለላው መስመር (Scrollbar) እንዳይታይ */
+.filter-container::-webkit-scrollbar {
+  display: none;
+}
+
+.filter-btn {
+  flex: 0 0 auto; /* ቁልፎቹ እንዳይኮማተሩ */
+  padding: 8px 18px;
+  font-size: 14px;
+  /* የተቀረው እስታይልህ እንዳለ ይቆያል */
+}
