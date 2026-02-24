@@ -1,93 +1,129 @@
-import React from 'react';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
-import { HiUserGroup, HiOutlineOfficeBuilding, HiTrendingUp } from 'react-icons/hi';
+import React, { useState } from 'react';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend } from 'recharts';
+import { HiUserGroup, HiOutlineOfficeBuilding, HiTrendingUp, HiLogout, HiTrash, HiPencil, HiCheckCircle, HiSearch, HiX, HiSave } from 'react-icons/hi';
+import { motion, AnimatePresence } from 'framer-motion';
+import { db } from './firebase';
+import { doc, deleteDoc, updateDoc } from "firebase/firestore";
 
-const AdminDashboard = ({ registeredUsers }) => {
-  // ስታቲስቲክስ ዳታ ማዘጋጀት
+const AdminDashboard = ({ registeredUsers, onClose }) => {
+  const [searchTerm, setSearchTerm] = useState("");
+  const [editingUser, setEditingUser] = useState(null); 
+  const [editData, setEditData] = useState({}); 
+
+  // --- 1. ማጥፊያ (Delete) ---
+  const handleDelete = async (id, name) => {
+    if (window.confirm(`ባለሙያ "${name}"ን ለማጥፋት እርግጠኛ ነዎት?`)) {
+      try {
+        await deleteDoc(doc(db, "workers", id));
+      } catch (err) { alert("ማጥፋት አልተቻለም!"); }
+    }
+  };
+
+  // --- 2. ማስተካከያ መጀመር (Start Edit) ---
+  const startEdit = (user) => {
+    setEditingUser(user.id);
+    setEditData({ ...user });
+  };
+
+  // --- 3. ማስተካከያውን ማስቀመጥ (Save Update) ---
+  const handleUpdate = async () => {
+    try {
+      const userRef = doc(db, "workers", editingUser);
+      await updateDoc(userRef, {
+        name: editData.name,
+        profession: editData.profession,
+        district: editData.district,
+        phone: editData.phone,
+        experience: editData.experience
+      });
+      setEditingUser(null);
+      alert("መረጃው በትክክል ተስተካክሏል!");
+    } catch (err) { alert("ማስተካከል አልተቻለም!"); }
+  };
+
+  const filteredUsers = registeredUsers.filter(user => 
+    user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    user.profession.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  // ዳታ ለግራፍ ቀደም ብዬ የሰራሁት)
   const districtData = registeredUsers.reduce((acc, user) => {
-    const found = acc.find(item => item.name === user.district);
-    if (found) { found.value++; } 
-    else { acc.push({ name: user.district || "ያልተጠቀሰ", value: 1 }); }
+    const name = user.district || "ሌላ";
+    const found = acc.find(item => item.name === name);
+    if (found) found.value++; else acc.push({ name, value: 1 });
     return acc;
   }, []);
 
-  const COLORS = ['#FFBB28', '#0088FE', '#00C49F', '#FF8042', '#8884d8'];
-
   return (
-    <div className="p-4" style={{ backgroundColor: '#121212', minHeight: '100vh', color: '#fff' }}>
-      <h2 className="mb-4 fw-bold text-warning">የአስተዳዳሪ ዳሽቦርድ</h2>
+    <motion.div className="admin-dashboard-overlay" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+      <div className="admin-container p-4">
+        
+        {/* Header & Stats*/}
+        <div className="d-flex justify-content-between align-items-center mb-5 bg-dark p-3 rounded-4 border border-secondary shadow-lg">
+          <h2 className="fw-bold text-warning m-0">የአስተዳዳሪ ዳሽቦርድ</h2>
+          <button className="btn btn-outline-danger rounded-pill px-4 fw-bold" onClick={onClose}><HiLogout /> ውጣ</button>
+        </div>
 
-      {/* የስታቲስቲክስ ካርዶች */}
-      <div className="row g-3 mb-5">
-        <div className="col-md-4">
-          <div className="p-4 rounded-4 bg-dark border border-secondary d-flex align-items-center gap-3">
-            <div className="p-3 bg-warning rounded-3 text-dark fs-2"><HiUserGroup /></div>
-            <div>
-              <p className="m-0 text-white-50">ጠቅላላ ባለሙያዎች</p>
-              <h3 className="m-0 fw-bold">{registeredUsers.length}</h3>
+        {/* Table with Inline Edit */}
+        <div className="chart-container shadow-lg p-4">
+          <div className="d-flex flex-column flex-md-row justify-content-between mb-4 gap-3">
+            <h5 className="fw-bold m-0">የባለሙያዎች መቆጣጠሪያ ሰንጠረዥ</h5>
+            <div className="position-relative">
+              <HiSearch className="position-absolute top-50 start-0 translate-middle-y ms-3 text-white-50" />
+              <input type="text" className="form-control bg-dark border-secondary text-white ps-5 rounded-pill" placeholder="ፈልግ..." onChange={(e) => setSearchTerm(e.target.value)} />
             </div>
           </div>
-        </div>
-        <div className="col-md-4">
-          <div className="p-4 rounded-4 bg-dark border border-secondary d-flex align-items-center gap-3">
-            <div className="p-3 bg-primary rounded-3 text-white fs-2"><HiOutlineOfficeBuilding /></div>
-            <div>
-              <p className="m-0 text-white-50">ንቁ ክፍለ ከተሞች</p>
-              <h3 className="m-0 fw-bold">{districtData.length}</h3>
-            </div>
-          </div>
-        </div>
-        <div className="col-md-4">
-          <div className="p-4 rounded-4 bg-dark border border-secondary d-flex align-items-center gap-3">
-            <div className="p-3 bg-success rounded-3 text-white fs-2"><HiTrendingUp /></div>
-            <div>
-              <p className="m-0 text-white-50">አዲስ ምዝገባ (ዛሬ)</p>
-              <h3 className="m-0 fw-bold">+{registeredUsers.length > 0 ? 1 : 0}</h3>
-            </div>
+
+          <div className="table-responsive">
+            <table className="table table-dark table-hover align-middle custom-table">
+              <thead>
+                <tr>
+                  <th>ስም</th>
+                  <th>ሙያ</th>
+                  <th>ክፍለ ከተማ</th>
+                  <th>ስልክ</th>
+                  <th>ልምድ</th>
+                  <th className="text-end">እርምጃ</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filteredUsers.map((user) => (
+                  <tr key={user.id}>
+                    {editingUser === user.id ? (
+                      // --- ኤዲት ሞድ (Edit Mode Inputs) ---
+                      <>
+                        <td><input type="text" className="form-control form-control-sm bg-secondary border-0 text-white" value={editData.name} onChange={e => setEditData({...editData, name: e.target.value})} /></td>
+                        <td><input type="text" className="form-control form-control-sm bg-secondary border-0 text-white" value={editData.profession} onChange={e => setEditData({...editData, profession: e.target.value})} /></td>
+                        <td><input type="text" className="form-control form-control-sm bg-secondary border-0 text-white" value={editData.district} onChange={e => setEditData({...editData, district: e.target.value})} /></td>
+                        <td><input type="text" className="form-control form-control-sm bg-secondary border-0 text-white" value={editData.phone} onChange={e => setEditData({...editData, phone: e.target.value})} /></td>
+                        <td><input type="number" className="form-control form-control-sm bg-secondary border-0 text-white" value={editData.experience} onChange={e => setEditData({...editData, experience: e.target.value})} /></td>
+                        <td className="text-end">
+                          <button className="btn btn-success btn-sm me-2" onClick={handleUpdate}><HiSave /></button>
+                          <button className="btn btn-light btn-sm" onClick={() => setEditingUser(null)}><HiX /></button>
+                        </td>
+                      </>
+                    ) : (
+                      // --- መደበኛ እይታ (Normal View) ---
+                      <>
+                        <td>{user.name}</td>
+                        <td><span className="badge bg-warning bg-opacity-10 text-warning">{user.profession}</span></td>
+                        <td>{user.district}</td>
+                        <td className="text-white-50 small">{user.phone}</td>
+                        <td>{user.experience} ዓመት</td>
+                        <td className="text-end">
+                          <button className="btn btn-sm btn-outline-info border-0 me-2" onClick={() => startEdit(user)}><HiPencil /></button>
+                          <button className="btn btn-sm btn-outline-danger border-0" onClick={() => handleDelete(user.id, user.name)}><HiTrash /></button>
+                        </td>
+                      </>
+                    )}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         </div>
       </div>
-
-      <div className="row mb-5">
-        {/* የባር ግራፍ (Bar Chart) */}
-        <div className="col-lg-8 mb-4">
-          <div className="p-4 rounded-4 bg-dark border border-secondary h-100">
-            <h5 className="mb-4">የባለሙያዎች ስርጭት በክፍለ ከተማ</h5>
-            <div style={{ width: '100%', height: 300 }}>
-              <ResponsiveContainer>
-                <BarChart data={districtData}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#333" />
-                  <XAxis dataKey="name" stroke="#888" />
-                  <YAxis stroke="#888" />
-                  <Tooltip contentStyle={{ backgroundColor: '#222', border: 'none' }} />
-                  <Bar dataKey="value" fill="#FFBB28" radius={[4, 4, 0, 0]} />
-                </BarChart>
-              </ResponsiveContainer>
-            </div>
-          </div>
-        </div>
-
-        {/* ክብ ግራፍ (Pie Chart) */}
-        <div className="col-lg-4 mb-4">
-          <div className="p-4 rounded-4 bg-dark border border-secondary h-100 text-center">
-            <h5 className="mb-4 text-start">የሙያ ክፍፍል</h5>
-            <div style={{ width: '100%', height: 250 }}>
-              <ResponsiveContainer>
-                <PieChart>
-                  <Pie data={districtData} innerRadius={60} outerRadius={80} paddingAngle={5} dataKey="value">
-                    {districtData.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                    ))}
-                  </Pie>
-                  <Tooltip />
-                </PieChart>
-              </ResponsiveContainer>
-            </div>
-            <p className="small text-white-50 mt-2">በመረጃው መሰረት አብዛኛው ባለሙያ ከየካ ክፍለ ከተማ ነው</p>
-          </div>
-        </div>
-      </div>
-    </div>
+    </motion.div>
   );
 };
 
