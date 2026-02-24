@@ -1,16 +1,28 @@
-# React + Vite
+# BemuyaConnect (በሙያ ኮኔክት) 🛠️🇪🇹
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+**BemuyaConnect** is a professional digital platform designed to bridge the gap between skilled Ethiopian artisans and potential customers. It serves as a digital directory and marketplace for diverse local talents, ranging from traditional weavers and potters to modern carpenters and tailors.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 🌟 Key Features
+* **Artisan Directory:** Connects users with verified local professionals to showcase craftsmanship and increase artisan income.
+* **Search & Discover:** Includes localized search functionality (e.g., searching by district like Bole or Lideta) to help users find experts near them.
+* **Interactive Maps:** Utilizes **Leaflet maps** to provide visual locations of service providers.
+* **Multi-language Support:** Fully accessible in both **Amharic** and **English** to cater to a wide range of users.
 
-## React Compiler
+---
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## 🚀 Tech Stack
+* **Frontend:** React.js, Vite, Bootstrap
+* **Database & Backend:** Firebase (Real-time data)
+* **Animations:** Framer Motion
+* **Maps:** React Leaflet
+* **Hosting:** Vercel
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## 🛠️ Installation & Setup
+
+1. **Clone the repository:**
+   ```bash
+   git clone [https://github.com/siniduyitna/bemuya-connect.git](https://github.com/siniduyitna/bemuya-connect.git)
