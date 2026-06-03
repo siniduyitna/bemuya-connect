@@ -3,7 +3,7 @@ import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { motion, AnimatePresence } from 'framer-motion';
 import { TypeAnimation } from 'react-type-animation';
-import { HiSearch, HiX } from 'react-icons/hi';
+import { HiSearch, HiX, HiCheckCircle, HiStar } from 'react-icons/hi';
 import { HelmetProvider, Helmet } from 'react-helmet-async';
 
 // Leaflet Imports
@@ -17,8 +17,8 @@ import markerShadow from 'leaflet/dist/images/marker-shadow.png';
 let DefaultIcon = L.icon({
     iconUrl: markerIcon,
     shadowUrl: markerShadow,
-    iconSize: [25, 41],
-    iconAnchor: [12, 41]
+    iconSize: [25, 41],     // ማስተካከያ 1
+    iconAnchor: [12, 41]    // ማስተካከያ 2
 });
 L.Marker.prototype.options.icon = DefaultIcon;
 
@@ -33,6 +33,8 @@ import Login from "./components/auth/Login";
 import Navbar from "./components/layout/Navbar";
 import ScrollToTop from './components/ScrollToTop';
 import About from './components/About';
+import ArtisanCard from './components/ArtisanCard'; 
+import SkeletonCard from './components/SkeletonCard'; 
 
 // Performance: Lazy Loading
 const RegistrationForm = lazy(() => import('./RegistrationForm'));
@@ -58,19 +60,25 @@ function App() {
   const [registeredUsers, setRegisteredUsers] = useState([]);
   const [isAdminView, setIsAdminView] = useState(false);
   const [isLoginOpen, setIsLoginOpen] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   const t = translations[lang] || translations['am'];
 
-  // 1. Firebase Real-time Listener
+  // 1. Firebase Real-time Listener ከሎዲንግ ስቴት ጋር
   useEffect(() => {
+    setLoading(true);
     const q = query(collection(db, "workers"), orderBy("createdAt", "desc"));
     const unsubscribe = onSnapshot(q, (snapshot) => {
       setRegisteredUsers(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+      setLoading(false);
+    }, (error) => {
+      console.error(error);
+      setLoading(false);
     });
     return () => unsubscribe();
   }, []);
 
-  // 2. ሰርች ሲደረግ በራሱ ወደ ውጤቱ ስክሮል እንዲያደርግ (አዲስ የተጨመረ)
+  // 2. ሰርች ሲደረግ በራሱ ወደ ውጤቱ ስክሮል እንዲያደርግ
   useEffect(() => {
     if (searchTerm.trim().length > 0) {
       const artisanSection = document.getElementById('artisans');
@@ -110,6 +118,11 @@ function App() {
     return matchesFilter && (matchesTitle || hasMatchingWorker);
   });
 
+  const testimonialsData = [
+    { name: lang === 'am' ? "አልማዝ አየለ" : "Almaz Ayele", role: lang === 'am' ? "የቤት እመቤት" : "Homeowner", comment: lang === 'am' ? "በጣም ታማኝ እና ጎበዝ አናጺ እዚህ አገኘሁ። ስራቸው እጅግ ጥራት ያለው ነው!" : "Found a very honest and skilled carpenter here. Excellent service quality!", rating: 5 },
+    { name: "Samuel Gebre", role: "Contractor", comment: lang === 'am' ? "የባለሙያዎችን አድራሻ በካርታ ጭምር ማሳየቱ ስራችንን በጣም አቅልሎታል የቢዝነስ ሰዎችን ያግዛል።" : "Showing artisan locations on a live map has simplified our sourcing process significantly.", rating: 5 }
+  ];
+
   return (
     <HelmetProvider>
       <div className="App-container">
@@ -146,7 +159,7 @@ function App() {
           </div>
         </header>
 
-        {/* --- እንዴት ይሰራ (How It Works) --- */}
+        {/* How It Works */}
         <section id="how-it-works" className="py-5 bg-dark border-top border-secondary">
           <div className="container text-center text-white">
             <h2 className="text-warning fw-bold mb-5">{t.howItWorks || "እንዴት ይሠራል?"}</h2>
@@ -167,7 +180,6 @@ function App() {
         {/* Categories Grid */}
         <main id="artisans" className="py-5">
           <div className="container">
-            {/* ሰርች ውጤት ማሳያ (አዲስ የተጨመረ) */}
             {searchTerm && (
               <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="mb-4 p-2 bg-warning bg-opacity-10 border border-warning rounded text-warning text-center fw-bold">
                 {lang === 'am' ? `"${searchTerm}" በሚል ፍለጋ ${filteredArtisans.length} ውጤቶች ተገኝተዋል` : `Found ${filteredArtisans.length} results for "${searchTerm}"`}
@@ -180,6 +192,7 @@ function App() {
                 <button key={f} className={`filter-btn ${activeFilter === f ? 'active' : ''}`} onClick={() => setActiveFilter(f)}>{t[f] || f}</button>
               ))}
             </div>
+            
             <div className="bento-grid">
               {filteredArtisans.length > 0 ? filteredArtisans.map(item => (
                 <motion.div layout key={item.id} className={`bento-item ${item.size}`} 
@@ -192,8 +205,29 @@ function App() {
           </div>
         </main>
 
-        {/* --- ስለ እኛ (About Us) --- */}
+        {/* About Us */}
         <About t={t} />
+
+        {/* Testimonials Section */}
+        <section className="py-5 bg-dark border-top border-secondary">
+          <div className="container text-center text-white">
+            <h3 className="fw-bold mb-5 text-warning">{lang === 'am' ? "የደንበኞች ምስክርነት" : "Client Testimonials"}</h3>
+            <div className="row g-4">
+              {testimonialsData.map((item, i) => (
+                <div key={i} className="col-md-6">
+                  <motion.div className="glass-card p-4 h-100 text-start border border-secondary rounded-4 bg-opacity-25" whileHover={{ scale: 1.01 }}>
+                    <div className="d-flex text-warning mb-2">
+                      {[...Array(item.rating)].map((_, idx) => <HiStar key={idx} />)}
+                    </div>
+                    <p className="mb-3 text-white-50 italic">"{item.comment}"</p>
+                    <h6 className="text-warning fw-bold m-0">{item.name}</h6>
+                    <small className="text-white-50">{item.role}</small>
+                  </motion.div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
 
         <Suspense fallback={<div className="text-center p-5 text-warning">Loading...</div>}>
           <Contact t={t} lang={lang} />
@@ -231,17 +265,29 @@ function App() {
                     </MapContainer>
                   </div>
 
-                  <div className="artisan-list-container mt-4">
-                    {(artisansList[selectedArtisan.id] || []).map((art, idx) => (
-                      <div key={idx} className="artisan-item-card d-flex justify-content-between align-items-center p-3 mb-2 rounded border border-secondary">
-                        <div className="text-white">
-                          <h4 className="h6 m-0 fw-bold">{art.name}</h4>
-                          <small className="text-warning">{art.district}</small> • <small className="text-white-50">{art.experience} {t.exp}</small>
-                        </div>
-                        <a href={`tel:${art.phone}`} className="btn btn-warning btn-sm px-3 fw-bold">{t.call}</a>
-                      </div>
-                    ))}
-                  </div>
+                  {/* 3. በሞዳሉ ውስጥ አዲሱ ArtisanCard ከ SkeletonCard ሎጂክ ጋር */}
+                 <div className="row g-3 mt-4 artisan-list-container">
+  {loading ? (
+    [1, 2, 3, 4].map((n) => (
+      <div className="col-md-6" key={n}>
+        <SkeletonCard />
+      </div>
+    ))
+  ) : (
+    (artisansList[selectedArtisan.id] || []).map((art, idx) => (
+      <div className="col-md-6" key={idx}>
+        <ArtisanCard
+          artisan={{
+            ...art,
+            profession: selectedArtisan.title,
+            isVerified: true,
+          }}
+        />
+      </div>
+    ))
+  )}
+</div>
+
                 </motion.div>
               </motion.div>
             )}
